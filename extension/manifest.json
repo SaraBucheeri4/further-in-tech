@@ -1,0 +1,60 @@
+{
+  "manifest_version": 3,
+  "name": "Haris \u2014 local payment check",
+  "version": "0.3.0",
+  "description": "Shows a local notice when a page requests payment details or a one-time code.",
+  "background": {
+    "service_worker": "worker.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Check this page with Haris",
+    "default_icon": {
+      "16": "art/icon-16.png",
+      "32": "art/icon-32.png",
+      "48": "art/icon-48.png",
+      "128": "art/icon-128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "directory.js",
+        "language.js",
+        "notice.js",
+        "scan.js",
+        "detect.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "art/*.webp",
+        "art/BarlowCondensed-Black.ttf",
+        "art/Cairo.ttf"
+      ],
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ]
+    }
+  ],
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "icons": {
+    "16": "art/icon-16.png",
+    "32": "art/icon-32.png",
+    "48": "art/icon-48.png",
+    "128": "art/icon-128.png"
+  }
+}

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Haris</title>
+<style>
+  @font-face { font-family: Cairo; src: url("art/Cairo.ttf"); font-weight: 200 1000; font-display: swap }
+  html[dir="rtl"] body { font-family: Cairo, system-ui, sans-serif }
+  * { box-sizing: border-box }
+  body { margin: 0; width: 310px; background: #fff5e9; color: #283d3b; padding: 22px; font: 16px/1.4 system-ui; border-top: 5px solid #197278 }
+  h1 { font-size: 23px; margin: 0 }
+  header { display: flex; align-items: center; gap: 9px; margin-bottom: 15px }
+  header img { width: 28px; height: 28px }
+  .result { border-block-start: 1px solid #bccbc7; padding-block: 11px }
+  #status { margin: 0; font-size: 17px; font-weight: 750 }
+  #status[data-result="danger"] { color: #772e25 }
+  #status[data-result="listed"] { color: #195e61 }
+  #description { font-size: 14px; margin: 5px 0 0 }
+  #hostname { text-align: start; overflow-wrap: anywhere; font: 12px/1.5 monospace; margin: 5px 0 0 }
+  .actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap }
+  #show { background: transparent; border: 1px solid #677a72; color: #283d3b; font-size: 14px }
+  button:disabled { opacity: .6; cursor: wait }
+  :focus-visible { outline: 2px solid #772e25; outline-offset: 3px }
+  button, select { font: inherit; border-radius: 4px }
+  button { border: 0; background: #195e61; color: white; padding: 10px 14px; font-weight: 700; cursor: pointer }
+  label { display: block; margin: 16px 0 5px; font-weight: 600 }
+  select { background: #fff9ef; border: 1px solid #677a72; color: inherit; padding: 6px 10px; width: 100% }
+  small { display: block; border-top: 1px solid #bccbc7; margin-top: 18px; padding-top: 10px }
+</style>
+<header><img src="art/icon-32.png" alt=""><h1 id="title"></h1></header>
+<section class="result" aria-live="polite" aria-atomic="true">
+  <p id="status"></p>
+  <p id="description" hidden></p>
+  <p id="hostname" dir="ltr" hidden></p>
+</section>
+<div class="actions"><button id="scan" type="button" disabled>Scan now</button><button id="show" type="button" hidden></button></div>
+<label for="language" id="language-label"></label>
+<select id="language"><option value="en" lang="en">English</option><option value="ar" lang="ar">العربية</option></select>
+<small id="privacy"></small>
+<script src="language.js"></script>
+<script src="directory.js"></script>
+<script src="scan.js"></script>
+<script src="popup.js"></script>
+</html>

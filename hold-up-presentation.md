@@ -3,142 +3,127 @@ marp: true
 theme: default
 size: 16:9
 lang: en
+title: Haris
 style: |
-  section { background: #faf9f4; color: #172e32; font-family: Arial, sans-serif; padding: 66px 88px; font-size: 35px; line-height: 1.35; }
-  h1, h2 { font-family: Georgia, serif; font-weight: normal; line-height: 1.08; letter-spacing: -0.035em; }
-  h1 { font-size: 78px; } h2 { font-size: 60px; }
-  h3 { font-size: 29px; margin-bottom: 0.4em; }
-  blockquote { border-left: 6px solid #bb5936; margin-left: 0; padding-left: 24px; color: #172e32; }
-  strong { color: #165955; } code { font-size: 0.8em; }
-  section.lead { background: #18383a; color: #ffffff; }
-  section.lead strong { color: #bfe8d6; }
+  section { background: #EDDDD4; color: #283D3B; padding: 55px 78px; font: 34px/1.25 "Instrument Sans", Arial, sans-serif; }
+  h1,h2 { color: #283D3B; font-family: "Red Hat Text", "Arial Black", Arial, sans-serif; font-weight: 900; letter-spacing: -.045em; line-height: 1.04; }
+  h2 { font-size: 66px; margin: 0 0 28px; }
+  p { margin: 14px 0; }
+  ol { padding-left: 1.25em; }
+  li { border-top: 2px solid #197278; padding: 11px 0; }
+  li::marker { color: #197278; font-weight: 700; }
+  code { font-family: "Spline Sans Mono", monospace; font-size: .85em; }
+  section.dark { background: #283D3B; color: #EDDDD4; }
+  section.dark h2, section.dark strong { color: #EDDDD4; }
 ---
 
-<!-- _class: lead -->
+![bg cover](design/presentation-covers/split-card-petal.png)
 
-# Two weeks ago, my friend lost all the money in her account.
+<!--
+SLIDE 1 · 0:00–0:25
+“Two weeks ago, my friend got scammed through a website that looked like a payment gateway. She told me it took all the money out of her account. I don’t want that to happen to me, and I know you don’t want it to happen to you either.”
+Pause on the image. This is the friend’s reported experience. The later bill, SMS and caller are fictional examples. The alternate logo-free covers are split-card-chestnut.png and split-card-slate.png in the same folder.
+-->
 
-She thought she was on a payment gateway.
+---
+
+## It looked like a payment gateway
 
 `www[.]dilmunexpress[.]site`
 
+**When could someone have warned her?**
+
 <!--
-SLIDE 1 · 0:00–0:28 · Speaker 1
-“Two weeks ago, my friend got scammed through this website. She told me it looked like a payment gateway. By the time she realised it was fake, all the money in her account was gone. I don’t want that to happen to me. I know none of you want it to happen to you either. So let me show you where we could have interrupted it.”
-Let the address sit on screen for one beat. Keep it plain text. The incident is the friend’s account. The SMS, amount and call on the following slides are a fictional demonstration.
+SLIDE 2 · 0:25–0:42
+“This is the address she shared with me. Imagine seeing it on your phone when you’re already expecting a payment request. What could help you decide before you type your card details?”
+Keep the reported address as plain text. The team has not independently investigated the incident.
 -->
 
 ---
 
-## Hold Up
+## Three places Haris can help
 
-A customer gets a text about a **BD 1.500** bill.  
-The link opens a checkout. Then “support” calls.
-
-**Where would you want a warning?**
+1. **Chrome extension** · Spot a page asking for payment or a one-time code.
+2. **Mobile app / Calls** · Hear when someone asks you to read out that code.
+3. **Mobile app / SMS** · Check where a billing text wants to take you.
 
 <!--
-SLIDE 2 · 0:28–0:50 · Speaker 1
-“Here’s a fictional example. You might catch the text. I might only notice the checkout. Someone else might pick up the phone. Hold Up gives each of us a chance to pause before we pay or give away a code.”
-Introduce the product quietly. Set up the phone and desktop side by side. Enable airplane mode, turn off Wi-Fi and cold-start the installed mobile release build. Keep it offline through the SMS and call checks. The story sequence is illustrative and does not require device pairing.
+SLIDE 3 · 0:42–1:00
+“One Chrome extension and one React Native app with two sections. You might first encounter a scam in any of these places. Each check should help on its own.”
 -->
 
 ---
 
-## The text says “pay your bill”
+## How Chrome spots a payment request
 
-> Your bill of BD 1.500 is due. Pay here today.
-
-**Check link** → The linked page asks for card details.  
-Your operator lists a different billing address.
-
-**Open official billing**
+1. A **Manifest V3 content script** checks visible labels, buttons and field types. A `MutationObserver` catches a checkout or code field that appears later.
+2. As soon as it sees a payment or code prompt, Haris **shows a notice**. Local rules compare the site and payment host with the operator’s listed billing partners.
+3. A mismatch triggers **“This gateway isn’t listed for your operator.”** The customer can leave and open official billing.
 
 <!--
-SLIDE 3 · 0:50–1:18 · Speaker 2 · SMS demo
-Paste the fictional SMS or use Android Share. Tap Check link. Point to the destination and the extracted “pay” request. “You haven’t had to visit the link. The prototype compares its saved page preview with our demo operator’s billing directory. Here the claimed biller and payment destination don’t match.”
-Use a stored local fixture. For new or shortened links without reliable evidence, show “Couldn’t verify.” The stage example uses fictional data.
+SLIDE 4 · 1:00–1:38
+“The cue appears before you type. We can recognise a one-time-code field from its label or autocomplete metadata. We never need the code itself. Genuine checkouts still get a quiet cue. An unknown merchant or a frame the extension lacks permission to inspect gives an unverified result.”
 -->
 
 ---
 
-## The moment the checkout appears
+## How the app hears a code request
 
-**Payment details requested**  
-This gateway isn’t listed for the operator named on the page.
-
-**Leave page**　　**Open official billing**
+1. The **Calls** section feeds a consented audio sample to a bundled multilingual Whisper model through **whisper.rn**.
+2. On the phone, bilingual rules examine the transcript. In “عشان نحل المشكلة، عطنا الـ OTP”, the phrase **“عطنا الـ OTP”** triggers the warning.
+3. The customer sees **“They’re asking you to read out your login code.”** Haris masks spoken digits and clears the transcript when the session ends.
 
 <!--
-SLIDE 4 · 1:18–1:48 · Speaker 2 · Chrome demo
-Open the harmless local checkout. Keep your hands off the keyboard until the notice appears. Then reveal a dynamically added OTP field. “Chrome flags either prompt immediately on detection. It can do that from the labels before you type a single digit.”
-Switch briefly to the genuine fixture. It still gets a payment notice, with the listed destination and no disruptive alert. If a frame cannot be inspected, the UI must say coverage is limited. Never open the reported domain on stage.
+SLIDE 5 · 1:38–2:15
+“Speech recognition transcribes what was said. Rules distinguish asking for the code from advice to keep it private. A recorded support call is the hackathon input. Live calls inside an operator’s app would be an opt-in pilot. Ordinary cellular-call audio requires platform or operator support.”
 -->
 
 ---
 
-## Listen for the request
+## How the app checks an SMS link
 
-> «عشان نحل المشكلة، **عطنا الـ OTP**»
-
-**They’re asking you to read out your login code.**
-
-Keep the code private. End the call and open official support.
+1. Share or paste the message into **SMS**. React Native passes the selected text to local TypeScript rules that find the payment request and extract the hostname.
+2. Haris compares the hostname with a **bundled billing directory**. For the example link, a saved page preview also reveals a card-entry form.
+3. Haris shows the mismatch and offers **Open official billing**. An unfamiliar link or unresolved redirect gets **“Couldn’t verify.”**
 
 <!--
-SLIDE 5 · 1:48–2:23 · Speaker 2 · Call demo
-Play a recording made with a consenting teammate. Label it “Recorded demo call · transcribed on this phone.” Give the model a moment to caption the line. Point to the highlighted phrase as it appears. Read the English explanation aloud so everyone can follow.
-“The speech model turns audio into words on the phone. A small bilingual rule set highlights the request. A phrase like ‘never share your code’ should produce a different result.” If the recogniser misses the line, show a clearly labelled reference transcript. The prototype input is a staged recording. Live operator support calls are a pilot.
+SLIDE 6 · 2:15–2:50
+“Our example asks for BD 1.500. That sounds plausible. The useful evidence is that the named operator and gateway do not match. The saved preview belongs to the fictional example. An offline phone cannot see the contents of a previously unseen website. Opening the operator’s official site is a separate customer action.”
 -->
 
 ---
 
-## The phone can do both checks offline
+<!-- _class: dark -->
 
-The **React Native app** checks the selected SMS and transcribes the sample call on the phone.
+## The operator supplies the directory. The phone runs the check.
 
-Messages, links, audio and transcripts stay on the device during analysis.
+Chrome and the app use the same **TypeScript rules and billing records**.
 
-**The operator supplies official billing addresses and payment partners.**
+The mobile design keeps selected messages, URLs, audio and transcripts on the device during analysis.
 
 <!--
-SLIDE 6 · 2:23–2:53 · Speaker 1
-“All three checks use the same directory, action labels and warning rules. A phone and a laptop can agree about a destination without exchanging anybody’s inbox. The speech model works locally. We mask codes before displaying the transcript and clear it when the session ends. Content on a page has no authority to change where the official billing button goes.”
-These are design targets. Before presenting, repeat both checks in a release build with connectivity enabled. Verify that the app sends zero analysis requests and queues nothing to upload on reconnection. A customer opening official billing starts a separate online action.
+SLIDE 7 · 2:50–3:20
+“One operator can tell us which domains and payment partners it uses. Chrome checks what is on the current page. The app can check a message or transcribe supported audio offline. We can test this in airplane mode, then check network traffic when connected and after reconnecting. Those are proposed privacy tests, not measured results.”
 -->
 
 ---
 
-## A prototype an operator can test
+## The first telecom pilot
 
-**Hackathon** · Chrome extension, React Native app, one recorded bilingual call and a bundled billing directory.
+**One operator** supplies its billing domains and approved processors.
 
-**First pilot** · One operator, its billing partners and opt-in calls within its support app.
+**Customers of different ages** try a genuine bill, a fake gateway and a caller asking for a code.
 
-<!--
-SLIDE 7 · 2:53–3:23 · Speaker 1
-“Manifest V3 and TypeScript watch for visible payment and code requests. React Native and TypeScript power the mobile interface. The phone and extension share the same TypeScript rules. The native whisper.rn module runs the bundled multilingual speech model offline. Our first partner would verify the billing directory and help test the opt-in call experience. Ordinary mobile apps have restricted access to cellular call audio.”
-“If this works for customers, we can add eligible SMS filtering and tune the speech experience with Gulf Arabic speakers.” Describe components as planned until demonstrated.
--->
-
----
-
-<!-- _class: lead -->
-
-## Would the warning have arrived in time?
-
-**Before the first digit. Before the code is spoken.**
-
-We’re asking one telecom partner to test this with its customers.
+**We measure** whether the warning arrives before disclosure and whether customers can still pay the genuine bill.
 
 <!--
-SLIDE 8 · 3:23–3:55 · Speaker 1
-“I keep thinking about the second before my friend typed in her details. That’s the second we want to give back to someone else. Help us test whether a customer can leave a fake checkout, find the real bill, and still pay it with confidence.”
-Ask for one billing or fraud lead and a small test across age groups. Measure warnings before input, time to a call alert, genuine checkouts interrupted and customers reaching official billing. Give actual counts only after testing. Read the headline as an ambition. A call warning depends on when the request is audible and understood.
+SLIDE 8 · 3:20–3:55
+“I keep thinking about the moment before my friend typed in her details. Help us test whether Haris can give someone enough information, in that moment, to make a different choice.”
+Next steps after a pilot would be opt-in calls inside the operator app and evaluation of Gulf Arabic speech. Report outcomes only after testing.
 -->
 
 <!--
-REHEARSAL NOTES · Off-screen; eight slides, approximately 3 minutes 55 seconds including demo cues. No official pitch length is assumed. If there are two speakers, the storyteller owns slides 1–2 and 6–8 and the demonstrator owns slides 3–5. If the room has no audio, use the captioned demo and identify it as a recording.
+REHEARSAL NOTES · Eight slides, approximately 3 minutes 55 seconds. Speaker 1 can tell the story and close. Speaker 2 can explain the three checks on slides 4–6.
 
 What we borrowed from winning presentations
 • Argus, 2025 Microsoft Imagine Cup World Champion. Microsoft documented the founders’ grandparents’ experiences, showed the physical prototype and published its final pitch. We adapted the personal origin and the visible demonstration. Here, the observable result is a warning appearing while the presenter’s hands are still off the keyboard. Microsoft's stage photo and account: https://blogs.microsoft.com/bayarea/2025/05/13/stanford-students-vie-to-win-the-2025-imagine-cup-with-a-device-to-help-people-with-low-vision/ . Official final pitch: https://www.youtube.com/watch?v=oAYnlvZD92Q .
